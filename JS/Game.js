@@ -2,76 +2,100 @@ var altura = 0;
 var largura = 0;
 var vidas = 1;
 var tempo = 15;
+var criaMosquitoTempo = 1500;
+var pontos = 0;
 
-function ajustaTamanhoPalcoJogo(){
+var nivel = localStorage.getItem('nivelJogo');
+
+localStorage.setItem('ponts',0);
+
+var tempoMosquito = 1700;
+
+    if(nivel === 'normal'){
+        criaMosquitoTempo = 1500;
+    } else if(nivel === 'dificil'){
+        criaMosquitoTempo = 1000;
+    }else if (nivel === 'chucknorris'){
+        criaMosquitoTempo = 750;
+    }
+
+
+function ajustaTamanhoPalcoJogo() {
     altura = window.innerHeight;
     largura = window.innerWidth;
     console.log(largura, altura);
 }
 
-ajustaTamanhoPalcoJogo()
+ajustaTamanhoPalcoJogo();
 
-function posicaoRandomica(){
-    if(document.getElementById('mosquito')){
-        document.getElementById('mosquito').remove();
-        if(vidas > 3){
-            //game over
-            window.location.href='gameover.html'
-        }else{
-            document.getElementById('v'+ vidas).src="IMG/skull.png";
+function posicaoRandomica() {
+    if (document.getElementById('morcego')) {
+        document.getElementById('morcego').remove();
+
+        if (vidas > 3) {
+            // game over
+            window.location.href = "gameover.html";
+        } else {
+            document.getElementById('v' + vidas).src = "IMG/skull.png";
             vidas++;
         }
     }
-    var posicaoX = Math.floor(Math.random() * largura) -90;
-    var posicaoY = Math.floor(Math.random() * altura) -90;
-    posicaoX = posicaoX < 0 ? 0 : posicaoX; 
-    posicaoY = posicaoY < 0 ? 0 : posicaoY; 
 
-    console.log(posicaoX, posicaoY)
+    var posicaoX = Math.floor(Math.random() * largura) - 90;
+    var posicaoY = Math.floor(Math.random() * altura) - 90;
 
-    //criar o elemento html
-    var mosquito = document.createElement('img');
-    mosquito.src = 'IMG/morcego.png';
-    mosquito.className = tamanhoAleatorio() +' '+ ladoAleaorio();
-    mosquito.style.left = posicaoX + 'px';
-    mosquito.style.top = posicaoY + 'px';
-    mosquito.style.position = 'absolute';
-    mosquito.id='mosquito';
-    document.body.appendChild(mosquito);
+    posicaoX = posicaoX < 0 ? 0 : posicaoX;
+    posicaoY = posicaoY < 0 ? 0 : posicaoY;
 
-    //MATA MUSQUITO
-    mosquito.onclick = function(){
-        //alert('moreeeeeu otario');
+    console.log(posicaoX, posicaoY);
+
+    // criar elemento html
+    var morcego = document.createElement('img');
+    morcego.src = "IMG/morcego.png";
+    morcego.className = tamanhoAleatorio() + " " + ladoAleaorio();
+    morcego.style.left = posicaoX + "px";
+    morcego.style.top = posicaoY + "px";
+    morcego.style.position = "absolute";
+    morcego.id = "morcego";
+    document.body.appendChild(morcego);
+
+    // mata mosquito
+    morcego.onclick = function () {
+        pontos++;
+        localStorage.setItem('ponts',pontos);
+        document.getElementById("pontuacao").innerHTML = pontos;
         this.remove();
-    }
+    };
 }
-function tamanhoAleatorio(){
-    var classe = Math.floor(Math.random()*3);
-    switch(classe){
+
+function tamanhoAleatorio() {
+    var classe = Math.floor(Math.random() * 3);
+    switch (classe) {
         case 0:
-            return 'mosquito1';
+            return "morcego1";
         case 1:
-            return 'mosquito2';
+            return "morcego2";
         case 2:
-            return 'mosquito3';
+            return "morcego3";
     }
 }
-function ladoAleaorio(){
-    var classe = Math.floor(Math.random()*2);
-    switch(classe){
+
+function ladoAleaorio() {
+    var classe = Math.floor(Math.random() * 2);
+    switch (classe) {
         case 0:
-            return 'ladoA';
+            return "ladoA";
         case 1:
-            return 'ladoB';
+            return "ladoB";
     }
 }
 
-var cronometro =setInterval(function(){
-    tempo -=1;
-    if(tempo < 0){
-        window.location.href = 'vitoria.html';
-    }else{
-        document.getElementById('cronometro').innerHTML = tempo;
+var cronometro = setInterval(function () {  
+    tempo -= 1;
+    if (tempo < 0) {
+        clearInterval(cronometro);
+        window.location.href = "victory.html";
+    } else {
+        document.getElementById("cronometro").innerHTML = tempo;
     }
-
 }, 1000);
