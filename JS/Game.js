@@ -60,12 +60,19 @@ function posicaoRandomica() {
     document.body.appendChild(morcego);
 
     // mata mosquito
-    morcego.onclick = function () {
-        pontos++;
-        localStorage.setItem('ponts',pontos);
+    morcego.onclick = function() {
+        if (this.classList.contains('morcego3')) {
+            pontos += 1;
+        } else if (this.classList.contains('morcego2')) {
+            pontos += 2;
+        } else {
+            pontos += 3;
+        }
+        //console.log(pontos);
+        localStorage.setItem('ponts', pontos);
         document.getElementById("pontuacao").innerHTML = pontos;
         this.remove();
-    };
+    }
 }
 
 function tamanhoAleatorio() {
